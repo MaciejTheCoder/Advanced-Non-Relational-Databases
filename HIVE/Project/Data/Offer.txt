@@ -1,0 +1,8 @@
+Offered_Price:30000,Final_Price:30000|1|1
+Offered_Price:30000,Final_Price:30000|2|2
+Offered_Price:30000,Final_Price:30000|3|3
+Offered_Price:30000,Final_Price:30000|4|4
+Offered_Price:40000,Final_Price:40000|31|5
+Offered_Price:35000,Final_Price:35000|32|6
+Offered_Price:35000,Final_Price:35000|33|7
+Offered_Price:30000,Final_Price:30000|34|8

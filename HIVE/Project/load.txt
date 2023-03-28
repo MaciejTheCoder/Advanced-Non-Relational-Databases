@@ -1,0 +1,26 @@
+create  table date_stage_textfile (ID_Date int, Day int, Month_number int, Year int,Month_Name string) row format delimited fields terminated by '|' stored as textfile;
+load data local inpath 'Date.txt' into table date_stage_textfile;
+
+insert overwrite table date_ partition (Month_Name)
+select * from date_stage_textfile;
+
+load data local inpath 'Client.txt' into table clients;
+
+load data local inpath 'Car.txt' into table cars;
+
+load data local inpath 'Buying_Car.txt' into table buying_car;
+
+load data local inpath 'Offer.txt' into table offers;
+
+create table agents_positions (Agent_ID int, Name string, position string)  row format delimited fields terminated by '|' stored as textfile; 
+
+load data local inpath 'Agent.txt' into table agents_positions;
+
+insert into agents partition (position ="Sales Development Rep") select Agent_ID , Name from agents_positions where position ="Sales Development Rep";
+
+insert into agents partition (position ="Account Executive") select Agent_ID , Name from agents_positions where position ="Account Executive";
+
+insert into agents partition (position ="Outside Salesperson") select Agent_ID , Name from agents_positions where position ="Outside Salesperson";
+
+insert into agents partition (position ="Account Manager") select Agent_ID , Name from agents_positions where position ="Account Manager";
+

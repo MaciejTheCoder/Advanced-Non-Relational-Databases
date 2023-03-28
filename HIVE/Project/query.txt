@@ -1,0 +1,63 @@
+// 1 Compare the number of bought cars in the analysed month vs previous month
+select count(DISTINCT buying_car.Car_ID) as nr_of_bought_cars,date_.Month_number,cars.Body from buying_car
+ join date_ on date_.ID_Date=buying_car.Buying_date_ID
+ join cars on cars.Car_ID = buying_car.Car_ID
+ where date_.Month_number =6 or date_.Month_number =7
+group by date_.Month_number, cars.Body;
+
+// 2 Best selling body of cars in analyzed and previous month
+select  * from (select count(1) as nr_of_bought_cars,date_.Month_number,cars.Body from buying_car
+ join date_ on date_.ID_Date=buying_car.Buying_date_ID
+ join cars on cars.Car_ID = buying_car.Car_ID
+ where date_.Month_number=7  
+group by  cars.Body ,date_.Month_number
+order by nr_of_bought_cars DESC limit 2) as tab1
+Union
+select  * from (select count(1) as nr_of_bought_cars,date_.Month_number,cars.Body from buying_car
+ join date_ on date_.ID_Date=buying_car.Buying_date_ID
+ join cars on cars.Car_ID = buying_car.Car_ID
+ where date_.Month_number=6  
+group by  cars.Body,date_.Month_number
+order by nr_of_bought_cars DESC limit 2) as tab2;
+
+//3 Compare average profits for invidual agents in this and previous month
+select avg(Profit) as AverageProfit,date_.Month_number,Agents.Agent_ID from buying_car
+ join date_ on date_.ID_Date=buying_car.Buying_date_ID
+ join Agents on Agents.Agent_ID = buying_car.Agent_ID
+ where date_.Month_number=6 or date_.Month_number=7  
+group by date_.Month_number, Agents.Agent_ID;
+
+//4 Compare average profits for invidual agents in this and previous month
+select avg(Profit) as AverageProfit,date_.Month_number,Agents.Agent_ID from buying_car
+ join date_ on date_.ID_Date=buying_car.Buying_date_ID
+ join Agents on Agents.Agent_ID = buying_car.Agent_ID
+ where date_.Month_number=6 or date_.Month_number=7  
+group by date_.Month_number, Agents.Agent_ID;
+
+//5 how avarage profits are shaped in relation to indivudual brands
+select avg(Profit) as AverageProfit,cars.Brand from buying_car
+ join date_ on date_.ID_Date=buying_car.Buying_date_ID
+ join cars on cars.Car_ID = buying_car.Car_ID
+group by cars.Brand;
+
+//7 number of sold cars in relation to agents possition where profit was at least 120% the buing price
+select count(1) as SoldProperties,agents.Position from buying_car
+ join agents on agents.Agent_ID = buying_car.Agent_ID
+where buying_car.Profit*1.2 > buying_car.Buying_price
+group by  agents.Position;
+
+//8 Compare average percent of price held for individual brands in June and July 
+select cars.Brand,sum(offers.prices['Final_Price'])/sum(offers.prices['Offered_Price']) as price_held,date_.Month_number from offers
+join cars on cars.Car_ID = offers.Car_ID
+join date_ on date_.ID_Date = offers.Date_ID
+group by cars.Brand,date_.Month_Number;
+
+//9 Compare sum of final prices in the offer in relation to cars body in this month 
+select sum(offers.prices['Final_Price']) price_sum,Cars.Body from offers
+join cars on cars.Car_ID = offers.Car_ID
+group by cars.Body;
+
+//10 Compare sum of profit from individual brand to all them
+select cars.brand ,round(sum(buying_car.profit)/sum(sum(buying_car.profit)) OVER(),4) as percentage from buying_car
+join cars on cars.Car_ID = buying_car.Car_ID
+group by cars.brand;

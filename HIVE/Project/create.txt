@@ -1,0 +1,23 @@
+create database projekt_hive_mm_jm;
+
+use projekt_hive_mm_jm;
+
+create external table clients (Client_ID int, Name string) row format delimited fields terminated by '|' location 'hdfs:///user/atndb14_2/database';
+
+create table agents (Agent_ID int, Name string) partitioned by (position string) row format delimited fields terminated by '|' stored as sequencefile;
+
+create external table date_ (ID_Date int, Day int, Month_number int, Year int) partitioned by (Month_name string) stored as RCFILE location 'hdfs:///user/atndb14_2/database';
+
+create table cars (Car_ID int, Brand string, Model string, Body string) 
+clustered by (Brand) into 3 buckets row format delimited FIELDS TERMINATED BY '|'
+COLLECTION ITEMS TERMINATED BY ','
+MAP KEYS TERMINATED BY ':' stored as textfile; 
+
+create table buying_car (Client_ID int, Agent_ID int, Car_ID int, Buying_date_ID int, Profit decimal, Buying_price decimal, Selling_price decimal) row format delimited fields terminated by '|' stored as textfile;
+
+create table offers (Prices map<string,decimal>, Date_ID int, Car_ID int) 
+row format delimited FIELDS TERMINATED BY '|'
+COLLECTION ITEMS TERMINATED BY ','
+MAP KEYS TERMINATED BY ':' stored as textfile;
+
+
